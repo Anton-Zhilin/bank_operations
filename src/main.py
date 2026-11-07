@@ -2,23 +2,11 @@ import json
 import os
 from datetime import datetime
 import pandas as pd
+from bisect import bisect
+
 
 # Импортируем готовые функции из модуля views
-from views import get_currency_rates, get_stock_prices, load_user_settings
-
-
-def get_greeting() -> str:
-    """Возвращает приветствие в зависимости от текущего времени суток"""
-    hour = datetime.now().hour
-    if 0 <= hour < 6:
-        return "Доброй ночи"
-    elif 6 <= hour < 12:
-        return "Доброе утро"
-    elif 12 <= hour < 18:
-        return "Добрый день"
-    else:
-        return "Добрый вечер"
-
+from views import get_currency_rates, get_stock_prices, load_user_settings, get_greeting
 
 def get_cards_stats(transactions: pd.DataFrame) -> list:
     """Рассчитывает статистику по каждой карте: последние 4 цифры, сумма расходов, кэшбэк"""
