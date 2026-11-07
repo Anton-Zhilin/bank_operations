@@ -109,4 +109,3 @@ def main(datetime_str: str) -> str:
     }
 
     return json.dumps(result, ensure_ascii=False, indent=2)
-

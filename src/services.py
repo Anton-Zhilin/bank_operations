@@ -5,7 +5,10 @@ import math
 import re
 from datetime import datetime
 from functools import reduce
+from pathlib import Path
 from typing import Any, Dict, List, Union, cast
+
+import pandas as pd
 
 # 1. Выгодные категории повышенного кешбэка
 
@@ -30,15 +33,15 @@ def profitable_categories(data: Union[List[Dict[str, Any]], Any], year: int, mon
     filtered = list(filter(matches_period, transactions))
 
     # Accumulator для reduce: суммируем кешбэк по категориям
-    def accumulate(result: Dict[str, float], t: Dict[str, Any]) -> Dict[str, float]:
+    def accumulate(results: Dict[str, float], t: Dict[str, Any]) -> Dict[str, float]:
         category = str(t.get("Категория", "Неизвестно"))
         cashback_raw = t.get("Кешбэк", 0)
         try:
             cashback = float(cashback_raw) if cashback_raw is not None and str(cashback_raw) != "nan" else 0.0
         except (ValueError, TypeError):
             cashback = 0.0
-        result[category] = result.get(category, 0) + cashback
-        return result
+        results[category] = results.get(category, 0) + cashback
+        return results
 
     result: Dict[str, float] = reduce(accumulate, filtered, cast(Dict[str, float], {}))
 
@@ -127,3 +130,22 @@ def search_transfers_to_individuals(transactions: List[Dict[str, Any]]) -> str:
     found = list(filter(is_transfer_to_individual, transactions))
 
     return json.dumps(found, ensure_ascii=False, indent=2, default=str)
+
+
+# 6. Дополнительная функция загрузки транзакций из Excel
+
+
+def load_transactions_from_excel(file_path: str | None = None) -> pd.DataFrame:
+    """Загрузить транзакции из Excel файла в виде DataFrame"""
+    if file_path is None:
+        # Путь по умолчанию
+        file_path = str(Path(__file__).parent.parent / "data" / "operations.xls")
+    else:
+        file_path = str(Path(file_path))
+
+    if not Path(file_path).exists():
+        raise FileNotFoundError(f"File not found: {file_path}")
+
+    # Читаем Excel файл и возвращаем сразу DataFrame
+    df = pd.read_excel(file_path, engine="calamine")
+    return df
