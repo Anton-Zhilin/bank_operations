@@ -7,6 +7,14 @@ authors = [
 ]
 requires-python = "^3.14"
 dependencies = [
+    "requests (>=2.34.2,<3.0.0)",
+    "pandas (>=3.1.1,<4.0.0)",
+    "openpyxl (>=3.1.5,<4.0.0)",
+    "xlrd (>=2.0.2,<3.0.0)",
+    "python-calamine (>=0.9.1,<0.10.0)",
+    "black (>=26.10.1,<27.0.0)",
+    "pandas-stubs (>=3.1.0.261029,<4.0.0.0)",
+    "pytest (>=9.2.0,<10.0.0)"
 ]
 
 
@@ -52,3 +60,16 @@ exclude = '''
 # максимальная длина строки
 line_length = 119
 
+[tool.coverage.report]
+exclude_also = [
+    'def __repr__',
+    'if self.debug:',
+    'if settings.DEBUG',
+    'raise AssertionError',
+    'raise NotImplementedError',
+    'if 0:',
+    'if __name__ == .__main__.:',
+    'if TYPE_CHECKING:',
+    'class .*\bProtocol\):',
+    '@(abc\.)?abstractmethod',
+]
